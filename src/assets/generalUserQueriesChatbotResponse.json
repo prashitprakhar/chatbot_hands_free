@@ -1,0 +1,52 @@
+{
+    "queriesWithResponse": [
+        {
+            "id":"1",
+            "query": "Hi",
+            "res": "Hello User, I am here to help you !!!",
+            "isGeneralQueryType": true
+        },
+        {
+            "id":"2",
+            "query": "hi",
+            "res": "Hello User, I am here to help you !!!",
+            "isGeneralQueryType": true
+        },
+        {
+            "id":"3",
+            "query": "HI",
+            "res": "Hello User, I am here to help you !!!",
+            "isGeneralQueryType": true
+        },
+        {
+            "id":"4",
+            "query": "Show me denials",
+            "res": "Hold on a sec while we fetch what you are looking for",
+            "isGeneralQueryType": false
+        },
+        {
+            "id":"5",
+            "query": "show me denials",
+            "res": "Hold on a sec while we fetch what you are looking for",
+            "isGeneralQueryType": false
+        },
+        {
+            "id":"6",
+            "query": "tableau chart",
+            "res": "Hold on a sec while we fetch what you are looking for",
+            "isGeneralQueryType": false
+        },
+        {
+            "id":"7",
+            "query": "Tableau chart",
+            "res": "Hold on a sec while we fetch what you are looking for",
+            "isGeneralQueryType": false
+        },
+        {
+            "id":"8",
+            "query": "outofcontext",
+            "res": "I am still under training and may not be able to help you at this time. Sorry for the inconvenience..\nTry with some other query for now",
+            "isGeneralQueryType": true
+        }
+    ]
+}

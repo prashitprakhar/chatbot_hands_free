@@ -1,0 +1,14 @@
+export const EMAIL_CHANGED = 'email_changed';
+export const PASSWORD_CHANGED = 'password_changed';
+export const LOGIN_USER_SUCCESS = 'login_user_success';
+export const LOGIN_USER_FAIL = 'login_user_fail';
+export const LOGIN_USER_PROGRESS = 'login_user_progress';
+export const BAR_CHART_DATA_FETCH_SUCCESS = 'bar_chart_data_fetch_success';
+export const QUERY_ENTERED = 'query_entered';
+export const CHART_SEARCH_PROGRESS = 'chart_search_progress';
+export const CHART_SEARCH_SUCCESS = 'chart_search_success';
+export const CHART_SEARCH_FAILURE = 'chart_search_failure';
+export const TABLEAU_CHART_SEARCH_SUCCESS = 'tableau_chart_search_success';
+export const CHATBOX_USER_QUERY_ENTERED = 'chatbox_user_query_entered';
+export const CHATBOX_CHART_SEARCH_SUCCESS = 'chatbox_chart_search_success';
+export const CHATBOX_QUERY_ENTER_IN_PROGRESS = 'chatbox_query_enter_in_progress';
