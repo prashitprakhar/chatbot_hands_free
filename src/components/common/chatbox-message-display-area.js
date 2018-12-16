@@ -1,105 +1,97 @@
 import React from 'react';
-import { View, Text, TextInput, Dimensions, FlatList, ScrollView, SectionList } from 'react-native';
-import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
+import { View, Text, FlatList, ScrollView } from 'react-native';
+import { Table, Row, Rows } from 'react-native-table-component';
 
 const ChatboxMsgDisplayArea = ({ msgBy, msgToDisplay, botRes, previousMessages }) => {
-    const { chatDisplayStyle, containerStyle } = styles;
-    //console.log("Previous Messages from DISPLAYAREA ----------", previousMessages);
-    // if(previousMessages && previousMessages){
-
-    // }
-    // else {
-
-    // }
+    //const { chatDisplayStyle, containerStyle, chatMsgContainerStyle } = styles;
     return (
-    <FlatList 
-    data= {previousMessages}
-    renderItem = {this.renderItem}
-    keyExtractor = {previousMessages => {previousMessages.resFromBot.id} }
-    />
+        <FlatList
+            data={previousMessages}
+            renderItem={this.renderItem}
+            keyExtractor={previousMessages => { previousMessages.resFromBot.id }}
+        />
     )
 }
 
 renderItem = (previousMessages) => {
-    const { chatDisplayStyle, containerStyle } = styles;
+    const { chatDisplayStyle, chatMsgContainerStyle, tableStyle } = styles;
     let RandomNumber = Math.floor(Math.random() * 100019) + 1;
-    //console.log("Hello RENDERITEM@@@", previousMessages);
-    if(!previousMessages.item.isGeneralQueryType){
+    if (!previousMessages.item.isGeneralQueryType) {
         let items = previousMessages.item.resFromBot;
-        //console.log("ITEMS.ID $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$",items)
         dataForChart = items.map(data => {
             return dataCheck = {
                 id: data.id + RandomNumber,
                 name: data.name,
                 height: data.height
             }
-
         });
-        //console.log("Hello RENDERITEM@@@ IFIFIIFIFIIFIFIFIIFIFIFIFIFIFIFIFI", dataForChart);
+        let tableDataNameCreation = [];
+        previousMessages.item.resFromBot.forEach(element => {
+            tableDataNameCreation.push([ element.name, element.height]);
+        });
+        const tableHead = ['Tower Name', 'Height'];
+        const tableData = tableDataNameCreation;
+    
         return (
-        <View>
-            <Text style={chatDisplayStyle}>{previousMessages.item.msgFrom} : {previousMessages.item.query}</Text>
-            <Text style={chatDisplayStyle}>BOT : Showing the chart Data...</Text>
-            <Text style={{ flex: 1, alignSelf: 'stretch' }}>______________________________________</Text>
-            <View style={{ flex: 1, flexDirection: "row", alignSelf: "stretch" }}>
-            
-	        <Text style={{ flex: 1, alignSelf: 'stretch' }} >Name</Text>
-            <Text style={{ flex: 1, alignSelf: 'stretch' }} >|  Height</Text>
-            
-	{/* <View style={{ flex: 1, alignSelf: 'stretch' }} />
-	<View style={{ flex: 1, alignSelf: 'stretch' }} /> */}
-</View>
-<Text style={{ flex: 1, alignSelf: 'stretch' }}>______________________________________</Text>
-            {/* <FlatList
-            data={items}
-            renderItem={this.renderItemForChart}
-            keyExtractor = {items => items.id }
-            /> */}
-            <FlatList
-            data={dataForChart}
-            renderItem={this.renderItemForChart}
-            keyExtractor = {dataForChart => dataForChart.id }
-            />
-            <Text style={{ flex: 1, alignSelf: 'stretch' }}>______________________________________</Text>
-        </View>
-        
-        )
-        // return this.renderItemForChart(previousMessages.item.resFromBot)
+            <View style={chatMsgContainerStyle}>
+            <Text style={chatDisplayStyle}>{previousMessages.item.msgFrom} : {previousMessages.item.displayMsgFromUser}</Text>
+            <Text style={chatDisplayStyle}>BOT : Your chart data is as below...</Text>
+            <View style={tableStyle.container}>
+              <Table borderStyle={{borderWidth: 2, borderColor: '#c8e1ff'}}>
+                <Row data={tableHead} style={tableStyle.head} textStyle={tableStyle.text}/>
+                <Rows data={tableData} textStyle={tableStyle.text}/>
+              </Table>
+            </View>
+            </View>
+          );
+        //Working code
+        // return (
+        //     <View style={chatMsgContainerStyle}>
+        //         <Text style={chatDisplayStyle}>{previousMessages.item.msgFrom} : {previousMessages.item.displayMsgFromUser}</Text>
+        //         <Text style={chatDisplayStyle}>BOT : Showing the chart Data...</Text>
+        //         <Text style={{ flex: 1, alignSelf: 'stretch' }}>______________________________________</Text>
+        //         <View style={{ flex: 1, flexDirection: "row", alignSelf: "stretch" }}>
+
+        //             <Text style={{ flex: 1, alignSelf: 'stretch' }} >Name</Text>
+        //             <Text style={{ flex: 1, alignSelf: 'stretch' }} >|  Height</Text>
+        //         </View>
+        //         <Text style={{ flex: 1, alignSelf: 'stretch' }}>______________________________________</Text>
+        //         <FlatList
+        //             data={dataForChart}
+        //             renderItem={this.renderItemForChart}
+        //             keyExtractor={dataForChart => dataForChart.id}
+        //         />
+        //         <Text style={{ flex: 1, alignSelf: 'stretch' }}>______________________________________</Text>
+        //     </View>
+        // )
     } else {
         return (
-            <ScrollView>
-                <Text style={chatDisplayStyle}>{previousMessages.item.msgFrom} : {previousMessages.item.query}</Text>
+            <ScrollView style={chatMsgContainerStyle}>
+                <Text style={chatDisplayStyle}>{previousMessages.item.msgFrom} : {previousMessages.item.displayMsgFromUser}</Text>
                 <Text style={chatDisplayStyle}>BOT : {previousMessages.item.resFromBot}</Text>
             </ScrollView>
-        )
+        );
     }
 }
 
+//Not used code now after Table implementation
 renderItemForChart = (previousMessages) => {
-    const { chatDisplayStyle, containerStyle, tableStyle } = styles;
-    console.log("SPECIAL MESSAGESS@@@@@@@@@@@@@@@",previousMessages)
+    //const { chatDisplayStyle, containerStyle, tableStyle } = styles;
     return (
-
-<View style={{ flex: 1, flexDirection: "row", alignSelf: "stretch" }}>
-	<Text style={{ flex: 1, alignSelf: 'stretch' }} >|  {previousMessages.item.name}</Text>
-    <Text style={{ flex: 1, alignSelf: 'stretch' }} >|  {previousMessages.item.height}</Text>
-	{/* <View style={{ flex: 1, alignSelf: 'stretch' }} />
-	<View style={{ flex: 1, alignSelf: 'stretch' }} /> */}
-</View>
+        <View style={{ flex: 1, flexDirection: "row", alignSelf: "stretch" }}>
+            <Text style={{ flex: 1, alignSelf: 'stretch' }} >|  {previousMessages.item.name}</Text>
+            <Text style={{ flex: 1, alignSelf: 'stretch' }} >|  {previousMessages.item.height}</Text>
+        </View>
     )
 }
 
 const styles = {
     chatDisplayStyle: {
-        //display: 'flex',
         alignSelf: 'flex-start',
         color: '#000000',
         fontSize: 18,
         paddingLeft: 5,
-        //height: 100,
-        //paddingTop: -100,
-        flex: 1,
-        //flexDirection: 'column-reverse'
+        flex: 1
     },
     textInputStyle: {
         flex: 2,
@@ -115,11 +107,24 @@ const styles = {
         flexDirection: 'column',
         alignItems: 'center'
     },
-    tableStyle : {
+    tableStyle: {
         container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' },
-  head: { height: 40, backgroundColor: '#f1f8ff' },
-  text: { margin: 6 }
+        head: { height: 40, backgroundColor: '#f1f8ff' },
+        text: { margin: 6 }
+    },
+    chatMsgContainerStyle: {
+        borderColor: '#000000',
+        borderWidth: 1,
+        broderRadius: 2,
+        shadowColor: '#000',
+        shadowRadius: 2,
+        shadowOpacity: 0.3,
+        shadowOffset: { width: 0, height: 2 },
+        marginLeft: 5,
+        marginRight: 5,
+        marginTop: 10,
+        elevation: 1
     }
 }
-//Dimensions.get('window').height - 70
+
 export { ChatboxMsgDisplayArea };

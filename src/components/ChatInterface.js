@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
-import { ScrollView, Text, Dimensions } from 'react-native';
+import { ScrollView, Text, Dimensions, View, LayoutAnimation } from 'react-native';
 import { connect } from 'react-redux';
-import { Header, CardSection, Card, ChatboxMsgDisplayArea, ChatboxQueryInputArea, Button } from './common';
+import InvertibleScrollView from 'react-native-invertible-scroll-view';
+import { Header, CardSection, Card, ChatboxMsgDisplayArea, ChatboxQueryInputArea, Button, Spinner } from './common';
 import { chatboxUserQueryUpdate, chatboxQuerySearch } from './../actions/chatboxActions';
 //import { GiftedChat } from 'react-native-gifted-chat';
 
 class ChatInterface extends Component {
 
+    componentWillUpdate(){
+        LayoutAnimation.easeInEaseOut();
+    }
+    
     onChatboxQueryUpdate(text) {
         //console.log("((((((((((((((((((((((((())))))))))))))))))))))))) ", text)
         this.props.chatboxUserQueryUpdate(text);
@@ -19,22 +24,22 @@ class ChatInterface extends Component {
     }
 
     renderDisplayAreaText() {
-        const { chatboxSendButtonClicked, chatboxQueryUpdate, isGeneralQueryType, chatboxPreviousMessages } = this.props;
-        //console.log("chatboxQueryUpdate FROM TEXT DISPLAY AREA", this.props.chatboxSendButtonClicked);
-        //console.log("chatboxQueryUpdate FROM TEXT DISPLAY AREA", this.props.chatboxQueryUpdate);
-        //console.log("Previous messages %%%%%%%%%%%%%%%%%%%%%%%%%%%%: ", chatboxPreviousMessages.length)
-        // if (!chatboxSendButtonClicked && isGeneralQueryType && chatboxQueryUpdate.msgFrom === 'user' && chatboxPreviousMessages.length === 0) {
-        //     console.log("1--------------------------------------");
-        //     return (
-        //         <ChatboxMsgDisplayArea
-        //             msgBy={chatboxQueryUpdate.msgFrom.toUpperCase()}
-        //             msgToDisplay={chatboxQueryUpdate.query}
-        //             botRes={chatboxQueryUpdate.resFromBot}
-        //         />
-        //     )
-        // } else 
-        if (chatboxPreviousMessages.length > 0 ) {
-            //console.log("2-------------------------------")
+        const { chatboxSendButtonClicked, chatboxQueryUpdate, isGeneralQueryType, chatboxPreviousMessages, chartDataSearchInProgress } = this.props;
+        if (chartDataSearchInProgress) {
+            //console.log("2----------------------------------------", this.props.chatboxQueryUpdate.resFromBot);
+            return (
+                <View>
+                    <ChatboxMsgDisplayArea
+                        previousMessages={chatboxPreviousMessages}
+                        msgBy={chatboxQueryUpdate.msgFrom}
+                        msgToDisplay={chatboxQueryUpdate.query}
+                        botRes={chatboxQueryUpdate.resFromBot}
+                    />
+                    <Spinner spinnerSize="large" />
+                </View>
+            );
+        }
+        else if (chatboxPreviousMessages.length > 0 && !chartDataSearchInProgress) {
             return (<ChatboxMsgDisplayArea
                 previousMessages={chatboxPreviousMessages}
                 msgBy={chatboxQueryUpdate.msgFrom}
@@ -50,40 +55,41 @@ class ChatInterface extends Component {
                 />
             )
         }
-        // else if(isGeneralQueryType && chatboxQueryUpdate.msgFrom === 'bot') {
-        //     return (
-        //         <ChatboxMsgDisplayArea 
-        //             msgBy={chatboxQueryUpdate.msgFrom}
-        //             msgToDisplay={chatboxQueryUpdate.query}
-        //         />
-        //     )
-        // }
-
     }
 
     render() {
-        //console.log("Window dimension@@@@@@",Dimensions.get('window'))
+        const { chatMsgContainerStyle } = styles;
         return (
-            <ScrollView>
-                <Card>
-                    <Header headerText="Hands Free Analytics"></Header>
+            <View style={{ flex: 1 }}>
+                <Header headerText="Hands Free Analytics"></Header>
+                <InvertibleScrollView
+                    inverted
+                    ref={ref => { this.scrollView = ref; }}
+                    onContentSizeChange={() => {
+                        this.scrollView.scrollTo({ y: 0, animated: true })
+                    }}
+                >
                     <CardSection>
                         {this.renderDisplayAreaText()}
                     </CardSection>
-                    <CardSection>
-                        <ChatboxQueryInputArea
-                            placeholderText="Type here"
-                            onChangeText={this.onChatboxQueryUpdate.bind(this)}
-                            value={this.props.chatboxQueryUpdate.query}
-                        />
-                    </CardSection>
-                    <CardSection>
-                        <Button onPressEvent={this.onChatboxButtonPress.bind(this)}>
-                            Send
+                </InvertibleScrollView>
+                <View style={{ paddingBottom: 10 }}>
+                    <Card>
+                        <CardSection>
+                            <ChatboxQueryInputArea
+                                placeholderText="Type here"
+                                onChangeText={this.onChatboxQueryUpdate.bind(this)}
+                                value={this.props.chatboxQueryUpdate.query}
+                            />
+                        </CardSection>
+                        <CardSection>
+                            <Button onPressEvent={this.onChatboxButtonPress.bind(this)}>
+                                Send
                     </Button>
-                    </CardSection>
-                </Card>
-            </ScrollView>
+                        </CardSection>
+                    </Card>
+                </View>
+            </View>
         )
     }
 }
@@ -98,6 +104,7 @@ const mapStateToProp = (state) => {
         chatboxEndOfMessageFromUser,
         chatboxPreviousMessages,
         isGeneralQueryType,
+        chartDataSearchInProgress
     } = state.chatboxData;
     //console.log("STATE FOR CHATBOX>.....>>>>>>>>", state);
     return {
@@ -107,8 +114,25 @@ const mapStateToProp = (state) => {
         chatboxSendButtonClicked,
         chatboxEndOfMessageFromUser,
         chatboxPreviousMessages,
-        isGeneralQueryType
+        isGeneralQueryType,
+        chartDataSearchInProgress
     };
+}
+
+const styles = {
+    chatMsgContainerStyle: {
+        borderColor: '#000000',
+        borderWidth: 1,
+        broderRadius: 2,
+        shadowColor: '#000',
+        shadowRadius: 2,
+        shadowOpacity: 0.3,
+        shadowOffset: { width: 0, height: 2 },
+        marginLeft: 5,
+        marginRight: 5,
+        marginTop: 10,
+        elevation: 1
+    }
 }
 
 export default connect(mapStateToProp, { chatboxUserQueryUpdate, chatboxQuerySearch })(ChatInterface);

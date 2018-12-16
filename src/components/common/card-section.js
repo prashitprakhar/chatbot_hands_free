@@ -13,9 +13,7 @@ const styles = {
     cardSectionContainerStyle : {
         borderBottomWidth : 1,
         padding : 5,
-        //backgroundColor : '#E67E22',
         backgroundColor : '#F7F7F7',
-        //backgroundColor : '#FFFFFF',
         justifyContent : 'flex-start',
         flexDirection : 'row',
         borderColor : '#ddd',

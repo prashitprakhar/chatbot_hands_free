@@ -1,55 +1,59 @@
 import {
     CHATBOX_USER_QUERY_ENTERED,
     CHATBOX_CHART_SEARCH_SUCCESS,
-    CHATBOX_QUERY_ENTER_IN_PROGRESS
+    CHATBOX_QUERY_ENTER_IN_PROGRESS,
+    CHATBOX_CHART_DATA_FETCH_PROGRESS
 } from './../actions/types';
 
 const INITIAL_STATE = {
     chatboxQueryUpdate : '',
+    displayMsgFromUser : '',
     chatboxChartSearchSuccess : false,
     chatboxChartData : '',
     chatboxSendButtonClicked: false,
     chatboxEndOfMessageFromUser: false,
     chatboxPreviousMessages : [],
-    isGeneralQueryType: true
+    isGeneralQueryType: true,
+    chartDataSearchInProgress: false
 }
 
 export default (state=INITIAL_STATE, action) => {
     switch(action.type) {
         case CHATBOX_USER_QUERY_ENTERED : {
-            //console.log("ChatBot Response : ",chatboxPreviousMessages);
-            
+            //console.log("ChatBot Response : ",action.payload);
                 return { ...state,
                     chatboxQueryUpdate : action.payload,
+                    displayMsgFromUser : action.payload.displayMsgFromUser,
                     chatboxSendButtonClicked: true,
                     chatboxEndOfMessageFromUser: true,
                     chatboxPreviousMessages: [ ...state.chatboxPreviousMessages, action.payload],
                     isGeneralQueryType: action.payload.isGeneralQueryType,
+                    chartDataSearchInProgress: false
                 };
-            
-            
         }
-        case CHATBOX_CHART_SEARCH_SUCCESS : {
-            //console.log("ACTION CHATBOX SEARCH @@@@@@@@@@@@@@@@@@@@@@@@@@",action.payload);
-            // return { ...state,
-            //     chatboxChartSearchSuccess: true,
-            //     chatboxChartData: action.payload,
-            //     chatboxEndOfMessageFromUser: true,
-            //     chatboxSendButtonClicked: true,
-            //     chatboxPreviousMessages : chatboxPreviousMessages.push()
-            // };
+        case CHATBOX_CHART_DATA_FETCH_PROGRESS : {
+            console.log("CHART_DATA_FETCH_PROGRESS@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Data Reducer",action.payload)
+            return { ...state,
+                chatboxQueryUpdate : action.payload,
+                displayMsgFromUser : action.payload.displayMsgFromUser,
+                chatboxSendButtonClicked: true,
+                chatboxEndOfMessageFromUser: true,
+                isGeneralQueryType: false,
+                chartDataSearchInProgress: true
+            };
         }
         case CHATBOX_QUERY_ENTER_IN_PROGRESS : {
-            //console.log("PREVIOUS MESSAGE STATUS :::::::::::::: ",state.chatboxPreviousMessages.length)
             if(state.chatboxPreviousMessages.length>0){
                 return { ...state,
                     chatboxQueryUpdate : action.payload,
+                    displayMsgFromUser : action.payload.displayMsgFromUser,
                     chatboxSendButtonClicked: true,
                     chatboxEndOfMessageFromUser: true,
                     isGeneralQueryType: action.payload.isGeneralQueryType,
+                    chartDataSearchInProgress: false
                 };
             } else {
-                return { ...state, chatboxQueryUpdate : action.payload, chatboxEndOfMessageFromUser: false, chatboxSendButtonClicked: false}
+                return { ...state, chatboxQueryUpdate : action.payload, displayMsgFromUser : action.payload.displayMsgFromUser,chatboxEndOfMessageFromUser: false, chatboxSendButtonClicked: false, chartDataSearchInProgress: false}
             }
         }
         default : 

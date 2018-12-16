@@ -1,40 +1,29 @@
-import { Actions } from 'react-native-router-flux';
 import {
     CHATBOX_USER_QUERY_ENTERED,
-    CHATBOX_CHART_SEARCH_SUCCESS,
-    CHATBOX_QUERY_ENTER_IN_PROGRESS
+    CHATBOX_QUERY_ENTER_IN_PROGRESS,
+    CHATBOX_CHART_DATA_FETCH_PROGRESS
 } from './types';
+import firebase from 'firebase';
 
 export const chatboxUserQueryUpdate = (text) => {
-    //console.log("user Query ACTIONS: ", text)
-
     return ({
         type: CHATBOX_QUERY_ENTER_IN_PROGRESS,
         payload: text
     });
-
-    // return ({
-    //     type: CHATBOX_USER_QUERY_ENTERED,
-    //     payload: text
-    // });
 }
 
 export const chatboxQuerySearch = ({ chatboxQueryUpdate }) => {
     let RandomNumber = Math.floor(Math.random() * 1000000) + 1;
-    let dataForChart = [];
     return (dispatch) => {
         let dataToSend = {
             from: '',
             query: '',
+            displayMsgFromUser: '',
             resFromBot: '',
             queryType: ''
         };
-        //console.log("chatboxQueryUpdate!!!!!!!!!!!",chatboxQueryUpdate);
-        const data = require('./../assets/bar-chart-data.json');
         const generalUserQueriesChatbotResponse = require('./../assets/generalUserQueriesChatbotResponse.json');
-        const quesWithRes = generalUserQueriesChatbotResponse.queriesWithResponse
-        //console.log("Query Entered, DataSearch from json",data);
-        //console.log("Query Entered, Saved queries and responses",quesWithRes);
+        const quesWithRes = generalUserQueriesChatbotResponse.queriesWithResponse;
         let resOfBot = quesWithRes.filter(element => {
             if (element.query === chatboxQueryUpdate) {
                 return element.query === chatboxQueryUpdate
@@ -42,42 +31,91 @@ export const chatboxQuerySearch = ({ chatboxQueryUpdate }) => {
                 return element.query === 'outofcontext'
             }
         });
-        // data.data.forEach(element => {
-
-        //     //console.log("element",element)
-        //     //element.id = element.id+RandomNumber*RandomNumber/1000;
-        // });
-        dataForChart = data.data.map(data => {
-            return dataCheck = {
-                id: data.id + RandomNumber,
-                name: data.name,
-                height: data.height
-            }
-
-        });
-        console.log("dataForChart@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@", dataForChart);
-
-
-        //console.log("Response Of Bot $$$$$$$$$$$$$$$$$$$$",denialsData)
-
         if (resOfBot[0].isGeneralQueryType) {
             dataToSend = {
                 id: resOfBot[0].id + RandomNumber,
-                msgFrom: 'user',
-                query: chatboxQueryUpdate,
+                msgFrom: 'USER',
+                query: '',
+                displayMsgFromUser: chatboxQueryUpdate,
                 resFromBot: resOfBot[0].res,
                 isGeneralQueryType: resOfBot[0].isGeneralQueryType
             };
-        } else {
-            dataToSend = {
+            dispatch({ type: CHATBOX_USER_QUERY_ENTERED, payload: dataToSend });
+        } else { 
+            //Case when data for Chart is needed from Firebase Firestore
+            dataToSendWhileSearchInProgress = {
                 id: resOfBot[0].id + RandomNumber,
-                msgFrom: 'user',
-                query: chatboxQueryUpdate,
-                resFromBot: dataForChart,
-                // resFromBot: data.data,
+                msgFrom: 'USER',
+                query: '',
+                displayMsgFromUser: chatboxQueryUpdate,
+                resFromBot: "Hold on while we search your chart...",
                 isGeneralQueryType: resOfBot[0].isGeneralQueryType
-            };
+            }
+            dispatch({ type: CHATBOX_CHART_DATA_FETCH_PROGRESS, payload: dataToSendWhileSearchInProgress });
+            firebase.database().ref(`/data`)
+                .on('value', snapshot => {
+                    dataToSendForBarChart = {
+                        id: resOfBot[0].id + RandomNumber,
+                        msgFrom: 'USER',
+                        query: '',
+                        displayMsgFromUser: chatboxQueryUpdate,
+                        resFromBot: snapshot.val(),
+                        isGeneralQueryType: resOfBot[0].isGeneralQueryType
+                    }
+                    dispatch({
+                        type: CHATBOX_USER_QUERY_ENTERED,
+                        payload: dataToSendForBarChart
+                    });
+                })
         }
-        dispatch({ type: CHATBOX_USER_QUERY_ENTERED, payload: dataToSend });
     }
 }
+    //Working Copy with Mock Json
+    // let RandomNumber = Math.floor(Math.random() * 1000000) + 1;
+    // let dataForChart = [];
+    // return (dispatch) => {
+    //     let dataToSend = {
+    //         from: '',
+    //         query: '',
+    //         resFromBot: '',
+    //         queryType: ''
+    //     };
+    //     const data = require('./../assets/bar-chart-data.json');
+    //     const generalUserQueriesChatbotResponse = require('./../assets/generalUserQueriesChatbotResponse.json');
+    //     const quesWithRes = generalUserQueriesChatbotResponse.queriesWithResponse
+    //     let resOfBot = quesWithRes.filter(element => {
+    //         if (element.query === chatboxQueryUpdate) {
+    //             return element.query === chatboxQueryUpdate
+    //         } else {
+    //             return element.query === 'outofcontext'
+    //         }
+    //     });
+    //     dataForChart = data.data.map(data => {
+    //         return dataCheck = {
+    //             id: data.id + RandomNumber,
+    //             name: data.name,
+    //             height: data.height
+    //         }
+
+    //     });
+
+    //     if (resOfBot[0].isGeneralQueryType) {
+    //         dataToSend = {
+    //             id: resOfBot[0].id + RandomNumber,
+    //             msgFrom: 'user',
+    //             query: chatboxQueryUpdate,
+    //             resFromBot: resOfBot[0].res,
+    //             isGeneralQueryType: resOfBot[0].isGeneralQueryType
+    //         };
+    //     } else {
+    //         dataToSend = {
+    //             id: resOfBot[0].id + RandomNumber,
+    //             msgFrom: 'user',
+    //             query: chatboxQueryUpdate,
+    //             resFromBot: dataForChart,
+    //             // resFromBot: data.data,
+    //             isGeneralQueryType: resOfBot[0].isGeneralQueryType
+    //         };
+    //     }
+    //     dispatch({ type: CHATBOX_USER_QUERY_ENTERED, payload: dataToSend });
+    // }

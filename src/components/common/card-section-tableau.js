@@ -17,7 +17,6 @@ export default class CardDetails extends Component {
             return (
                 <View style={styles.container}>
                     <WebView
-                        //source={{uri: this.props.navigation.state.params.uri}}
                         style={styles.webview}
                     />
                 </View>
@@ -26,7 +25,6 @@ export default class CardDetails extends Component {
             return (
                 <View style={styles.container}>
                     <WKWebView
-                        //source={{uri: this.props.navigation.state.params.uri}}
                         style={styles.webview}
                     />
                 </View>

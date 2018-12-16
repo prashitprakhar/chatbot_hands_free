@@ -30,5 +30,4 @@ const styles = {
         marginRight : 5
     }
 }
-//borderColor : '#007aff',
 export { Button };

@@ -16,8 +16,7 @@ const TextInputBar = ({ label, value, onChangeText, placeholder, secureTextEntry
                 style={textInputStyle}
             />
         </View>
-
-    )
+    );
 }
 
 const styles = {

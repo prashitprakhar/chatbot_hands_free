@@ -31,7 +31,8 @@ const styles = {
         fontSize: 18,
         paddingLeft: 5,
         //paddingRight: 5,
-        flex: 1
+        flex: 1,
+        position: 'absolute'
         //flexDirection: 'column-reverse'
     },
     textInputStyle: {
@@ -46,7 +47,7 @@ const styles = {
         height: 70,
         flex: 1,
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
     }
 }
 

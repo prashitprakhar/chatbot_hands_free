@@ -1,6 +1,6 @@
 import { QUERY_ENTERED,
     BAR_CHART_DATA_FETCH_SUCCESS,
-    CHART_SEARCH_PROGRESS,
+    CHART_DATA_FETCH_PROGRESS,
     CHART_SEARCH_SUCCESS,
     CHART_SEARCH_FAILURE,
     TABLEAU_CHART_SEARCH_SUCCESS } from './../actions/types';
@@ -8,6 +8,7 @@ import { QUERY_ENTERED,
 
 const INITIAL_STATE = {
      updatedQuery : '',
+     displayMsgFromUser : '',
      searchProgress : false,
      error : '',
      chartSearchSuccess : false,
@@ -22,10 +23,9 @@ export default (state=INITIAL_STATE, action) => {
             return action.payload;
         case QUERY_ENTERED : 
             return { ...state, updatedQuery: action.payload };
-        case CHART_SEARCH_PROGRESS : 
+        case CHART_DATA_FETCH_PROGRESS : 
             return { ...state, searchProgress: true, error: '' };
         case CHART_SEARCH_SUCCESS : {
-            //console.log("Actions @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ : ",action.payload)
             return { ...state, searchProgress: false, chartSearchSuccess: true, chartData: action.payload, tableauChartSearchSuccess: false, chartNotFound: false };
         }
         case CHART_SEARCH_FAILURE : {

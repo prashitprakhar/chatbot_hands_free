@@ -4,9 +4,6 @@ import { StyleSheet, View, ART, Dimensions, TouchableWithoutFeedback } from 'rea
 const {
     Surface,
     Group,
-    Rectangle,
-    ClippingRectangle,
-    LinearGradient,
     Shape,
     Text,
     Path,
@@ -90,28 +87,20 @@ class Bar extends Component {
 
         const x = d3.scale.scaleBand()
             .rangeRound([0, width])
-            //.padding(0.3)
             .paddingInner(0.3)
             .paddingOuter(0.5)
             .domain(barChartData.map(d => d.name))
-            //.domain(data.map(d => d.letter))
 
-        //const maxFrequency = max(data, d => d.frequency)
         const maxFrequency = max(barChartData, d => d.height)
 
         const y = d3.scale.scaleLinear()
             .rangeRound([height, 0])
             .domain([0, maxFrequency+.3*maxFrequency])
 
-        // const firstLetterX = x(data[0].letter)
-        // const secondLetterX = x(data[1].letter)
-        // const lastLetterX = x(data[data.length - 1].letter)
         const firstLetterX = x(barChartData[0].name)
         const secondLetterX = x(barChartData[1].name)
         const lastLetterX = x(barChartData[barChartData.length - 1].name)
-        // console.log("labelDX@&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
         const labelDx = (secondLetterX - firstLetterX) / 2
-        //console.log("labelDX@&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&",labelDx)
 
         const bottomAxis = [firstLetterX - labelDx, lastLetterX + labelDx]
 
@@ -132,16 +121,13 @@ class Bar extends Component {
         return(
             <View>
             <Surface width={screen.width} height={screen.height}>
-            {/* <Surface width={400} height={400}> */}
                 <Group x={margin.left} y={margin.top}>
                     <Group x={0} y={height}>
                         <Group key={-1}>
                             <Shape d={bottomAxisD} stroke={colours.black} key="-1"/>
                               {
-                                // data.map((d, i) =>(
                                     barChartData.map((d, i) =>(
                                     <Group
-                                        //x={x(d.letter) + labelDx}
                                         x={x(d.name) + labelDx}
                                         y={0}
                                         key={i + 1}
@@ -153,7 +139,6 @@ class Bar extends Component {
                                           fill={colours.black}
                                           font="18px helvetica"
                                         >
-                                          {/* {d.letter} */}
                                           {d.name}
                                         </Text>
                                     </Group>
