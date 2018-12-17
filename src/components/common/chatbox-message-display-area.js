@@ -4,16 +4,19 @@ import { Table, Row, Rows } from 'react-native-table-component';
 
 const ChatboxMsgDisplayArea = ({ msgBy, msgToDisplay, botRes, previousMessages }) => {
     //const { chatDisplayStyle, containerStyle, chatMsgContainerStyle } = styles;
+    console.log("################################################PREVIOUS MESSAGE FROM DISPLAY_AREA",previousMessages);
+    let RandomNumberForUserMSG = Math.floor(Math.random() * 100027) + 7;
     return (
         <FlatList
-            data={previousMessages}
+            data={msgToDisplay || previousMessages}
             renderItem={this.renderItem}
-            keyExtractor={previousMessages => { previousMessages.resFromBot.id }}
+            keyExtractor={previousMessages => { (previousMessages.resFromBot && previousMessages.resFromBot.id) || RandomNumberForUserMSG }}
         />
     )
 }
 
 renderItem = (previousMessages) => {
+    console.log("HERE ******************************",previousMessages)
     const { chatDisplayStyle, chatMsgContainerStyle, tableStyle } = styles;
     let RandomNumber = Math.floor(Math.random() * 100019) + 1;
     if (!previousMessages.item.isGeneralQueryType) {
@@ -44,7 +47,35 @@ renderItem = (previousMessages) => {
             </View>
             </View>
           );
-        //Working code
+    } else {
+        return (
+            <ScrollView style={chatMsgContainerStyle}>
+                <Text style={chatDisplayStyle}>{previousMessages.item.msgFrom} : {previousMessages.item.displayMsgFromUser}</Text>
+                <Text style={chatDisplayStyle}>BOT : {previousMessages.item.resFromBot}</Text>
+            </ScrollView>
+        );
+    }
+}
+
+renderUserMessage = (previousMessages) => {
+    const { chatDisplayStyle } = styles;
+    console.log("renderUserMessage --------- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",previousMessages)
+    return (
+        <Text style={chatDisplayStyle}>{previousMessages.item.msgFrom} : {previousMessages.item.displayMsgFromUser}</Text>
+    );
+}
+
+//Not used code now after Table implementation
+renderItemForChart = (previousMessages) => {
+    //const { chatDisplayStyle, containerStyle, tableStyle } = styles;
+    return (
+        <View style={{ flex: 1, flexDirection: "row", alignSelf: "stretch" }}>
+            <Text style={{ flex: 1, alignSelf: 'stretch' }} >|  {previousMessages.item.name}</Text>
+            <Text style={{ flex: 1, alignSelf: 'stretch' }} >|  {previousMessages.item.height}</Text>
+        </View>
+    )
+}
+       //Working code
         // return (
         //     <View style={chatMsgContainerStyle}>
         //         <Text style={chatDisplayStyle}>{previousMessages.item.msgFrom} : {previousMessages.item.displayMsgFromUser}</Text>
@@ -64,26 +95,7 @@ renderItem = (previousMessages) => {
         //         <Text style={{ flex: 1, alignSelf: 'stretch' }}>______________________________________</Text>
         //     </View>
         // )
-    } else {
-        return (
-            <ScrollView style={chatMsgContainerStyle}>
-                <Text style={chatDisplayStyle}>{previousMessages.item.msgFrom} : {previousMessages.item.displayMsgFromUser}</Text>
-                <Text style={chatDisplayStyle}>BOT : {previousMessages.item.resFromBot}</Text>
-            </ScrollView>
-        );
-    }
-}
 
-//Not used code now after Table implementation
-renderItemForChart = (previousMessages) => {
-    //const { chatDisplayStyle, containerStyle, tableStyle } = styles;
-    return (
-        <View style={{ flex: 1, flexDirection: "row", alignSelf: "stretch" }}>
-            <Text style={{ flex: 1, alignSelf: 'stretch' }} >|  {previousMessages.item.name}</Text>
-            <Text style={{ flex: 1, alignSelf: 'stretch' }} >|  {previousMessages.item.height}</Text>
-        </View>
-    )
-}
 
 const styles = {
     chatDisplayStyle: {

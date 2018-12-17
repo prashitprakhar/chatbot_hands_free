@@ -20,22 +20,65 @@ class ChatInterface extends Component {
     onChatboxButtonPress() {
         //console.log("On Button Press : ",this.props)
         const { chatboxQueryUpdate } = this.props;
+        //this.props.eachUserMessageToDisplay({ chatboxQueryUpdate });
         this.props.chatboxQuerySearch({ chatboxQueryUpdate });
     }
 
+    // renderDisplayAreaText() {
+    //     const { chatboxSendButtonClicked, chatboxQueryUpdate, isGeneralQueryType, chatboxPreviousMessages, chartDataSearchInProgress } = this.props;
+    //     if (chartDataSearchInProgress) {
+    //         //console.log("2----------------------------------------", this.props.chatboxQueryUpdate.resFromBot);
+    //         return (
+    //             <View>
+    //                 <ChatboxMsgDisplayArea
+    //                     previousMessages={chatboxPreviousMessages}
+    //                     msgBy={chatboxQueryUpdate.msgFrom}
+    //                     msgToDisplay={chatboxQueryUpdate.query}
+    //                     botRes={chatboxQueryUpdate.resFromBot}
+    //                 />
+    //                 <Spinner spinnerSize="large" />
+    //             </View>
+    //         );
+    //     }
+    //     else if (chatboxPreviousMessages.length > 0 && !chartDataSearchInProgress) {
+    //         return (<ChatboxMsgDisplayArea
+    //             previousMessages={chatboxPreviousMessages}
+    //             msgBy={chatboxQueryUpdate.msgFrom}
+    //             msgToDisplay={chatboxQueryUpdate.query}
+    //             botRes={chatboxQueryUpdate.resFromBot}
+    //         />)
+    //     } else {
+    //         return (
+    //             <ChatboxMsgDisplayArea
+    //                 msgBy="BOT"
+    //                 msgToDisplay="Here to Help !!!"
+    //                 botRes="Actively waiting for your queries"
+    //             />
+    //         )
+    //     }
+    // }
+
     renderDisplayAreaText() {
-        const { chatboxSendButtonClicked, chatboxQueryUpdate, isGeneralQueryType, chatboxPreviousMessages, chartDataSearchInProgress } = this.props;
+        const { chatboxSendButtonClicked, chatboxQueryUpdate, isGeneralQueryType, chatboxPreviousMessages, chartDataSearchInProgress, displayMsgFromUser } = this.props;
         if (chartDataSearchInProgress) {
-            //console.log("2----------------------------------------", this.props.chatboxQueryUpdate.resFromBot);
+            console.log("2----------------------------------------", this.props.displayMsgFromUser);
             return (
                 <View>
+                    <Card>
+                    <CardSection>
                     <ChatboxMsgDisplayArea
                         previousMessages={chatboxPreviousMessages}
                         msgBy={chatboxQueryUpdate.msgFrom}
-                        msgToDisplay={chatboxQueryUpdate.query}
+                        msgToDisplay={displayMsgFromUser}
                         botRes={chatboxQueryUpdate.resFromBot}
                     />
-                    <Spinner spinnerSize="large" />
+                    </CardSection>
+                    </Card>
+                    <Card>
+                        <CardSection>
+                        <Spinner spinnerSize="large" />
+                        </CardSection>
+                    </Card>   
                 </View>
             );
         }
@@ -104,7 +147,8 @@ const mapStateToProp = (state) => {
         chatboxEndOfMessageFromUser,
         chatboxPreviousMessages,
         isGeneralQueryType,
-        chartDataSearchInProgress
+        chartDataSearchInProgress,
+        displayMsgFromUser
     } = state.chatboxData;
     //console.log("STATE FOR CHATBOX>.....>>>>>>>>", state);
     return {
@@ -115,7 +159,8 @@ const mapStateToProp = (state) => {
         chatboxEndOfMessageFromUser,
         chatboxPreviousMessages,
         isGeneralQueryType,
-        chartDataSearchInProgress
+        chartDataSearchInProgress,
+        displayMsgFromUser
     };
 }
 

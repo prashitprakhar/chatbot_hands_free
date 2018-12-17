@@ -8,23 +8,24 @@ const RouterComponent = () => {
     return (
         <Router>
             <Scene key="root" hideNavBar>
-                <Scene key="auth">
+                {/* <Scene key="auth">
                     <Scene key="login" component={LoginForm} title="Please Login" />
-                </Scene>
+                </Scene> */}
                 <Scene key="main">
-                    <Scene
+                    {/* <Scene
                     rightTitle="Chat With Us >"
                     onRight={() => Actions.chatInterface()}
                     key="homepage"
                     component={ChatbotHomepage}
                     title="Homepage"
                     initial
-                    />
+                    /> */}
                     <Scene 
                     leftTitle="Back"
                     key="chatInterface"
                     component={ChatInterface}
                     title="Chatbox"
+                    initial
                      />
                 </Scene>
             </Scene>

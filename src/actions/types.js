@@ -13,3 +13,4 @@ export const CHATBOX_USER_QUERY_ENTERED = 'chatbox_user_query_entered';
 export const CHATBOX_CHART_SEARCH_SUCCESS = 'chatbox_chart_search_success';
 export const CHATBOX_QUERY_ENTER_IN_PROGRESS = 'chatbox_query_enter_in_progress';
 export const CHATBOX_CHART_DATA_FETCH_PROGRESS = 'chatbox_chart_data_fetch_progress';
+export const CHATBOX_USER_MESSAGE = 'chatbox_user_message';
