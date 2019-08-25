@@ -29,6 +29,15 @@ class App extends Component {
                 <RouterComponent />
             </Provider>
         );
+
+        // return (
+        //     <View>
+        //         <Header headerText="Hands Free Analytics" />
+        //         <Text>
+        //             Chat Bot on the roll...
+        //         </Text>
+        //     </View>
+        // );
     }
 }
 
